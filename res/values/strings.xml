@@ -4,5 +4,9 @@
     <string name="app_name">TestProject</string>
     <string name="action_settings">Settings</string>
     <string name="TestForCommit">Test commit</string>
+    <string name="name">Name: </string>
+    <string name="surname">Surname: </string>
+    <string name="dob">Date of birth: </string>
+    <string name="bio">BIO:</string>
 
 </resources>

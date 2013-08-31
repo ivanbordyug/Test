@@ -1,23 +1,31 @@
 package com.coffeecups.testproject;
 
+import android.app.TabActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 
-public class MainActivity extends Activity {
+public class MainActivity extends TabActivity {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		initializeTabHost();
+	}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
+	private void initializeTabHost() {
+		TabHost tabHost = getTabHost();
+		TabHost.TabSpec tabSpec = null;
+		initUserInfoTab(tabHost, tabSpec);
+	}
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    
+	private void initUserInfoTab(TabHost tabHost, TabSpec tabSpec) {
+		tabSpec = tabHost.newTabSpec("UserInfo");
+		tabSpec.setIndicator("User Info");
+		tabSpec.setContent(new Intent(MainActivity.this,
+				UserProfileActivity.class));
+		tabHost.addTab(tabSpec);
+	}
 }
