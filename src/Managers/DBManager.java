@@ -8,12 +8,9 @@ import com.coffeecups.testproject.R;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Xml;
 
 public class DBManager extends SQLiteOpenHelper {
 	Context context;

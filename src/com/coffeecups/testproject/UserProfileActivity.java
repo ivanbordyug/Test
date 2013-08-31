@@ -6,15 +6,12 @@ import org.json.JSONObject;
 import Managers.DBManager;
 import Managers.TestsManager;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.graphics.YuvImage;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class UserProfileActivity extends Activity {
 	@Override
