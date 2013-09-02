@@ -3,16 +3,37 @@ package com.coffeecups.testproject;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
-public class MainActivity extends TabActivity {
+public class MainActivity extends TabActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initializeTabHost();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			MainActivity.this.finish();
+			moveTaskToBack(true);
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.login_button) {
+			MainActivity.this.finish();
+			moveTaskToBack(true);
+		}
+
 	}
 
 	private void initializeTabHost() {

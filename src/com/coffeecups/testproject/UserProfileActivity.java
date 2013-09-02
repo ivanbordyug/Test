@@ -3,30 +3,51 @@ package com.coffeecups.testproject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.facebook.Session;
+import com.facebook.android.Facebook;
 import com.facebook.widget.ProfilePictureView;
 
 import Managers.DBManager;
 import Managers.TestsManager;
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class UserProfileActivity extends Activity {
+public class UserProfileActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
-
+		findViewById(R.id.login_button).setOnClickListener(this);
 		new TestsManager(this).runTestUP();
 		getUserInfo(getIntent().getExtras().getString("userId"));
-		// qwerty
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Session session = Session.getActiveSession();
+		if (session == null || session.isClosed()) {
+			startActivity(new Intent(UserProfileActivity.this,
+					LoginActivity.class));
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		Session session = Session.getActiveSession();
+		session.closeAndClearTokenInformation();
+		startActivity(new Intent(UserProfileActivity.this, LoginActivity.class));
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.facebook.widget.LoginButton;
 import Managers.DBManager;
 import Managers.TestsManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.Toast;
 import android.app.Activity;
 import android.content.Intent;
@@ -59,6 +60,15 @@ public class LoginActivity extends Activity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		uiHelper.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			LoginActivity.this.finish();
+			moveTaskToBack(true);
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	private void onSessionStateChange(Session session, SessionState state,
