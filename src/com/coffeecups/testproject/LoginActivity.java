@@ -61,7 +61,8 @@ public class LoginActivity extends Activity {
 		uiHelper.onSaveInstanceState(outState);
 	}
 
-	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+	private void onSessionStateChange(Session session, SessionState state,
+			Exception exception) {
 		if (session != null && session.isOpened()) {
 			// Get the user's data.
 			makeMeRequest(session);
@@ -71,9 +72,11 @@ public class LoginActivity extends Activity {
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
-		public void call(Session session, SessionState state, Exception exception) {
+		public void call(Session session, SessionState state,
+				Exception exception) {
 			if (exception != null) {
-				if (exception.getClass().isInstance(new FacebookAuthorizationException())) {
+				if (exception.getClass().isInstance(
+						new FacebookAuthorizationException())) {
 					failedInit();
 				}
 			}
@@ -84,29 +87,34 @@ public class LoginActivity extends Activity {
 	private void makeMeRequest(final Session session) {
 		// Make an API call to get user data and define a
 		// new callback to handle the response.
-		Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
-			@Override
-			public void onCompleted(GraphUser user, Response response) {
-				// If the response is successful
-				if (session == Session.getActiveSession()) {
-					if (user != null) {
-						DBManager DbManager = new DBManager(LoginActivity.this);
-						Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
-						intent.putExtra("userId", DbManager.addUser(user));
-						startActivity(intent);
+		Request request = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
+					@Override
+					public void onCompleted(GraphUser user, Response response) {
+						// If the response is successful
+						if (session == Session.getActiveSession()) {
+							if (user != null) {
+								DBManager DbManager = new DBManager(
+										LoginActivity.this);
+								Intent intent = new Intent(LoginActivity.this,
+										MainActivity.class);
+								intent.putExtra("userId",
+										DbManager.addUser(user));
+								startActivity(intent);
+							}
+						}
+						if (response.getError() != null) {
+							// Handle errors, will do so later.
+							failedInit();
+						}
 					}
-				}
-				if (response.getError() != null) {
-					// Handle errors, will do so later.
-					failedInit();
-				}
-			}
-		});
+				});
 		request.executeAsync();
 	}
 
 	private void failedInit() {
-		Toast.makeText(LoginActivity.this, R.string.enableInternetMsg, 5000).show();
+		Toast.makeText(LoginActivity.this, R.string.enableInternetMsg, 5000)
+				.show();
 		button.setVisibility(LoginButton.VISIBLE);
 	}
 }
