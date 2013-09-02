@@ -26,6 +26,7 @@ public class UserProfileActivity extends Activity {
 
 		new TestsManager(this).runTestUP();
 		getUserInfo(getIntent().getExtras().getString("userId"));
+		// qwerty
 	}
 
 	@Override
