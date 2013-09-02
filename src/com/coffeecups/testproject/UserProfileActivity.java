@@ -21,6 +21,7 @@ public class UserProfileActivity extends Activity {
 		setContentView(R.layout.userinfo);
 		new TestsManager(this).runTest();
 		getUserInfo();
+		// test
 	}
 
 	private void getUserInfo() {
@@ -28,8 +29,7 @@ public class UserProfileActivity extends Activity {
 		// DbManager.initializeDefaultUser();
 		Cursor user = getUser(DbManager);
 		if (user.moveToFirst()) {
-			Cursor userInfo = getUserInfo(DbManager,
-					Integer.valueOf(user.getString(0)));
+			Cursor userInfo = getUserInfo(DbManager, Integer.valueOf(user.getString(0)));
 			user.close();
 			if (userInfo.moveToFirst()) {
 				initializeUserInfoTab(userInfo);
@@ -45,14 +45,11 @@ public class UserProfileActivity extends Activity {
 		TextView dob = (TextView) findViewById(R.id.dob);
 		TextView bio = (TextView) findViewById(R.id.bio_content);
 
-		name.setText(name.getText().toString() + " "
-				+ getFieldStringValue(userInfo, "name"));
+		name.setText(name.getText().toString() + " " + getFieldStringValue(userInfo, "name"));
 
-		surname.setText(surname.getText().toString() + " "
-				+ getFieldStringValue(userInfo, "surname"));
+		surname.setText(surname.getText().toString() + " " + getFieldStringValue(userInfo, "surname"));
 
-		dob.setText(dob.getText().toString() + " "
-				+ getFieldStringValue(userInfo, "dob"));
+		dob.setText(dob.getText().toString() + " " + getFieldStringValue(userInfo, "dob"));
 
 		bio.setText(getFieldStringValue(userInfo, "bio"));
 
@@ -61,9 +58,7 @@ public class UserProfileActivity extends Activity {
 
 	private void addContacts(Cursor userInfo) {
 		try {
-			JSONObject object = new JSONObject(getFieldStringValue(userInfo,
-					"contacts")).getJSONObject("root")
-					.getJSONObject("contacts");
+			JSONObject object = new JSONObject(getFieldStringValue(userInfo, "contacts")).getJSONObject("root").getJSONObject("contacts");
 			JSONArray contacts = object.getJSONArray("item");
 			generateContacts(contacts);
 		} catch (Exception e) {
@@ -94,13 +89,11 @@ public class UserProfileActivity extends Activity {
 	}
 
 	private Cursor getUser(DBManager DbManager) {
-		return DbManager.select("users", "name = ?",
-				new String[] { "Ivan Bordyug" });
+		return DbManager.select("users", "name = ?", new String[] { "Ivan Bordyug" });
 	}
 
 	private Cursor getUserInfo(DBManager DbManager, int userId) {
-		return DbManager.select("usersinfo", "userId = ?",
-				new String[] { String.valueOf(userId) });
+		return DbManager.select("usersinfo", "userId = ?", new String[] { String.valueOf(userId) });
 	}
 
 	private String getFieldStringValue(Cursor cursor, String fieldName) {
