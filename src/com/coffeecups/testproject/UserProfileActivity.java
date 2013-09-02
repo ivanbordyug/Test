@@ -3,32 +3,46 @@ package com.coffeecups.testproject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.facebook.widget.ProfilePictureView;
+
 import Managers.DBManager;
 import Managers.TestsManager;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class UserProfileActivity extends Activity {
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.userinfo);
-		new TestsManager(this).runTest();
-		getUserInfo();
-		// test
+		setContentView(R.layout.activity_user_info);
+
+		new TestsManager(this).runTestUP();
+		getUserInfo(getIntent().getExtras().getString("userId"));
 	}
 
-	private void getUserInfo() {
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			UserProfileActivity.this.finish();
+			moveTaskToBack(true);
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private void getUserInfo(String userId) {
 		DBManager DbManager = new DBManager(this);
 		// DbManager.initializeDefaultUser();
 		Cursor user = getUser(DbManager);
 		if (user.moveToFirst()) {
+			// Cursor userInfo = getUserInfo(DbManager, userId);
 			Cursor userInfo = getUserInfo(DbManager, Integer.valueOf(user.getString(0)));
 			user.close();
 			if (userInfo.moveToFirst()) {
@@ -44,7 +58,10 @@ public class UserProfileActivity extends Activity {
 		TextView surname = (TextView) findViewById(R.id.surname);
 		TextView dob = (TextView) findViewById(R.id.dob);
 		TextView bio = (TextView) findViewById(R.id.bio_content);
+		ProfilePictureView imageProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
 
+		imageProfilePictureView.setProfileId(getFieldStringValue(userInfo, "userId"));
+		name.setText(name.getText().toString() + " " + getFieldStringValue(userInfo, "name"));
 		name.setText(name.getText().toString() + " " + getFieldStringValue(userInfo, "name"));
 
 		surname.setText(surname.getText().toString() + " " + getFieldStringValue(userInfo, "surname"));
@@ -88,10 +105,15 @@ public class UserProfileActivity extends Activity {
 		rootContacts.addView(view);
 	}
 
+	// private Cursor getUser(DBManager DbManager, String userId) {
+	// return DbManager.select("users", "userId = ?", new String[] { userId });
 	private Cursor getUser(DBManager DbManager) {
 		return DbManager.select("users", "name = ?", new String[] { "Ivan Bordyug" });
 	}
 
+	// private Cursor getUserInfo(DBManager DbManager, String userId) {
+	// return DbManager.select("usersinfo", "userId = ?", new String[] { userId
+	// });
 	private Cursor getUserInfo(DBManager DbManager, int userId) {
 		return DbManager.select("usersinfo", "userId = ?", new String[] { String.valueOf(userId) });
 	}
