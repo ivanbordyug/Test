@@ -18,14 +18,21 @@ public class MainActivity extends TabActivity {
 	private void initializeTabHost() {
 		TabHost tabHost = getTabHost();
 		TabHost.TabSpec tabSpec = null;
-		initUserInfoTab(tabHost, tabSpec);
+		initUserInfoTab(tabHost, tabSpec,
+				getIntent().getExtras().getString("userId"));
 	}
 
-	private void initUserInfoTab(TabHost tabHost, TabSpec tabSpec) {
+	private void initUserInfoTab(TabHost tabHost, TabSpec tabSpec, String userId) {
 		tabSpec = tabHost.newTabSpec("UserInfo");
 		tabSpec.setIndicator("User Info");
-		tabSpec.setContent(new Intent(MainActivity.this,
-				UserProfileActivity.class));
+		tabSpec.setContent(initUserProfileIntent(userId));
 		tabHost.addTab(tabSpec);
+	}
+
+	private Intent initUserProfileIntent(String userId) {
+		Intent intent = new Intent(new Intent(MainActivity.this,
+				UserProfileActivity.class));
+		intent.putExtra("userId", userId);
+		return intent;
 	}
 }
