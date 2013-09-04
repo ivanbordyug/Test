@@ -1,16 +1,30 @@
 package com.coffeecups.testproject;
 
-import com.facebook.*;
-import com.facebook.model.*;
-import com.facebook.widget.LoginButton;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import Managers.DBManager;
 import Managers.TestsManager;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.widget.Toast;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
+import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.widget.Toast;
+
+import com.facebook.FacebookAuthorizationException;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 
 public class LoginActivity extends Activity {
 	LoginButton button;
@@ -23,19 +37,21 @@ public class LoginActivity extends Activity {
 		uiHelper.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		button = (LoginButton) findViewById(R.id.login_button);
-		button.performClick();
 		// Check for an open session
-		Session session = Session.getActiveSession();
-		if (session != null && session.isOpened()) {
-			// Get the user's data
-			makeMeRequest(session);
-		}
+
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		uiHelper.onResume();
+		Session session = Session.getActiveSession();
+		if (session != null && session.isOpened()) {
+			// Get the user's data
+			makeMeRequest(session);
+		} else {
+			button.performClick();
+		}
 	}
 
 	@Override
@@ -111,6 +127,7 @@ public class LoginActivity extends Activity {
 								intent.putExtra("userId",
 										DbManager.addUser(user));
 								startActivity(intent);
+								LoginActivity.this.finish();
 							}
 						}
 						if (response.getError() != null) {

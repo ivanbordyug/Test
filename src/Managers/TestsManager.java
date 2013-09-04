@@ -5,6 +5,7 @@ import com.coffeecups.testproject.R;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class TestsManager {
 		ContentValues cv = new ContentValues();
 		testAddingToDatabase(DbManager, cv);
 		testReadingFromDB(DbManager);
+		testUpdatingUserInfo(DbManager);
 
 	}
 
@@ -41,6 +43,25 @@ public class TestsManager {
 		}
 	}
 
+	private void testUpdatingUserInfo(DBManager DbManager) {
+
+		try {
+			Cursor cursor = DbManager.select("usersinfo", "id = ?",
+					new String[] { "1" });
+			if (cursor.moveToFirst()) {
+				ContentValues cv = new ContentValues();
+				cv.put("about",
+						cursor.getString(cursor.getColumnIndex("about")));
+				DbManager.update("usersinfo", cv, "id = ?",
+						new String[] { "1" });
+				cursor.close();
+			}
+
+		} catch (Exception e) {
+			Toast.makeText(context, "Test updating user failed", 1000).show();
+		}
+	}
+
 	public void runTestLogin() {
 		if (!isOnline()) {
 			Toast.makeText(context, R.string.enableInternetMsg, 5000).show();
@@ -48,7 +69,8 @@ public class TestsManager {
 	}
 
 	public boolean isOnline() {
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			return true;

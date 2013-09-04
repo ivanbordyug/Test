@@ -1,6 +1,7 @@
 package Managers;
 
 import java.io.InputStream;
+import java.util.Arrays;
 
 import org.json.JSONObject;
 
@@ -33,7 +34,7 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL("create table usersinfo ("
 				+ "id integer primary key autoincrement," + "userId integer,"
 				+ "name text," + "surname text," + "dob text," + "bio text,"
-				+ "contacts text" + ");");
+				+ "contacts text," + "about text" + ");");
 		// db.execSQL("INSERT INTO " + tableUsers +
 		// " values(1,'Ivan Bordyug')");
 		// db.execSQL("INSERT INTO " + tableUsersInfo
@@ -63,6 +64,7 @@ public class DBManager extends SQLiteOpenHelper {
 		cv.put("dob", user.getBirthday());
 		cv.put("bio", getBio());
 		cv.put("contacts", getContacts());
+		cv.put("about", "");
 		database.insert(tableUsersInfo, null, cv);
 	}
 
@@ -78,6 +80,12 @@ public class DBManager extends SQLiteOpenHelper {
 		Cursor cursor = database.query(tableName, null, selection,
 				selectionArgs, null, null, null);
 		return cursor;
+	}
+
+	public void update(String tableName, ContentValues values,
+			String whereClause, String[] whereArgs) {
+		database = this.getWritableDatabase();
+		database.update(tableName, values, whereClause, whereArgs);
 	}
 
 	private String getBio() {
@@ -106,9 +114,11 @@ public class DBManager extends SQLiteOpenHelper {
 	}
 
 	public String addUser(GraphUser user) {
-		if (!select(tableUsers, "userId=?", new String[] { user.getId() })
-				.moveToFirst())
+		Cursor cursor = select(tableUsers, "userId=?",
+				new String[] { user.getId() });
+		if (!cursor.moveToFirst())
 			initializeUserInfo(user);
+		cursor.close();
 		return user.getId();
 	}
 }

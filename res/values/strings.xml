@@ -7,8 +7,11 @@
     <string name="TestForCommit">Test commit</string>
     <string name="name">Name: </string>
     <string name="surname">Surname: </string>
-    <string name="dob">Date of birth: </string>
+    <string name="dob">Birthday: </string>
     <string name="bio">BIO:</string>
     <string name="enableInternetMsg">Please enable internet connection</string>
+    <string name="editTextWindow">Edit</string>
+    <string name="leaveInfoLabel">Leave about</string>
+    <string name="dateErrorMsg">Wrong date</string>
 
 </resources>
