@@ -13,5 +13,9 @@
     <string name="editTextWindow">Edit</string>
     <string name="leaveInfoLabel">Leave about</string>
     <string name="dateErrorMsg">Wrong date</string>
+    <string name="action_people">With whom?</string>
+    <string name="action_people_default">Select friends</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_button_text">OK</string>
 
 </resources>

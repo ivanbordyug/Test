@@ -43,6 +43,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
 				getIntent().getExtras().getString("userId"));
 		initUserAboutTab(tabHost, tabSpec,
 				getIntent().getExtras().getString("userId"));
+		initUserFriendsTab(tabHost, tabSpec,
+				getIntent().getExtras().getString("userId"));
 	}
 
 	private void initUserInfoTab(TabHost tabHost, TabSpec tabSpec, String userId) {
@@ -60,6 +62,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
 		tabHost.addTab(tabSpec);
 	}
 
+	private void initUserFriendsTab(TabHost tabHost, TabSpec tabSpec,
+			String userId) {
+		tabSpec = tabHost.newTabSpec("UserFriends");
+		tabSpec.setIndicator("Friends");
+		tabSpec.setContent(initUserFriendsIntent(userId));
+		tabHost.addTab(tabSpec);
+	}
+
 	private Intent initUserProfileIntent(String userId) {
 		Intent intent = new Intent(new Intent(MainActivity.this,
 				UserProfileActivity.class));
@@ -70,6 +80,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
 	private Intent initUserAboutIntent(String userId) {
 		Intent intent = new Intent(new Intent(MainActivity.this,
 				UserAboutActivity.class));
+		intent.putExtra("userId", userId);
+		return intent;
+	}
+
+	private Intent initUserFriendsIntent(String userId) {
+		Intent intent = new Intent(new Intent(MainActivity.this,
+				PickFriendsActivity.class));
 		intent.putExtra("userId", userId);
 		return intent;
 	}

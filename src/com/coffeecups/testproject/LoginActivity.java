@@ -1,19 +1,11 @@
 package com.coffeecups.testproject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import Managers.DBManager;
 import Managers.TestsManager;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -28,6 +20,7 @@ import com.facebook.widget.LoginButton;
 
 public class LoginActivity extends Activity {
 	LoginButton button;
+	private static final int PICK_FRIENDS_ACTIVITY = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +47,13 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	private void startPickerActivity(Uri data, int requestCode) {
+		Intent intent = new Intent();
+		intent.setData(data);
+		intent.setClass(this, PickerActivity.class);
+		startActivityForResult(intent, 100);
+	}
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -64,6 +64,11 @@ public class LoginActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 100) {
+			uiHelper.onActivityResult(requestCode, resultCode, data);
+		} else if (resultCode == Activity.RESULT_OK) {
+			// Do nothing for now
+		}
 	}
 
 	@Override
@@ -120,6 +125,7 @@ public class LoginActivity extends Activity {
 						// If the response is successful
 						if (session == Session.getActiveSession()) {
 							if (user != null) {
+
 								DBManager DbManager = new DBManager(
 										LoginActivity.this);
 								Intent intent = new Intent(LoginActivity.this,
@@ -143,5 +149,22 @@ public class LoginActivity extends Activity {
 		Toast.makeText(LoginActivity.this, R.string.enableInternetMsg, 5000)
 				.show();
 		button.setVisibility(LoginButton.VISIBLE);
+	}
+
+	private void startPickFriendsActivity() {
+		FriendPickerApplication application = (FriendPickerApplication) getApplication();
+		application.setSelectedUsers(null);
+
+		Intent intent = new Intent(this, PickFriendsActivity.class);
+		// Note: The following line is optional, as multi-select behavior is
+		// the default for
+		// FriendPickerFragment. It is here to demonstrate how parameters
+		// could be passed to the
+		// friend picker if single-select functionality was desired, or if a
+		// different user ID was
+		// desired (for instance, to see friends of a friend).
+		PickFriendsActivity.populateParameters(intent, null, true, true);
+		startActivityForResult(intent, PICK_FRIENDS_ACTIVITY);
+
 	}
 }
