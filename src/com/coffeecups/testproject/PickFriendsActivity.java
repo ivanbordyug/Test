@@ -16,6 +16,7 @@
 
 package com.coffeecups.testproject;
 
+import Managers.TestsManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -111,7 +112,12 @@ public class PickFriendsActivity extends FragmentActivity {
 		super.onStart();
 		try {
 			// Load data, unless a query has already taken place.
-			friendPickerFragment.loadData(false);
+			TestsManager tManager = new TestsManager(this);
+			if (tManager.isOnline())
+				friendPickerFragment.loadData(false);
+			else {
+				Toast.makeText(this, R.string.enableInternetMsg, 1000).show();
+			}
 			/*
 			 * findViewById(R.id.com_facebook_picker_top_bar).setVisibility(View.
 			 * GONE);

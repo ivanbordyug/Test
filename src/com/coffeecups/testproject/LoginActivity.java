@@ -47,13 +47,6 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	private void startPickerActivity(Uri data, int requestCode) {
-		Intent intent = new Intent();
-		intent.setData(data);
-		intent.setClass(this, PickerActivity.class);
-		startActivityForResult(intent, 100);
-	}
-
 	@Override
 	public void onPause() {
 		super.onPause();

@@ -23,7 +23,7 @@ public class TestsManager {
 		testAddingToDatabase(DbManager, cv);
 		testReadingFromDB(DbManager);
 		testUpdatingUserInfo(DbManager);
-
+		TestFavourites(DbManager);
 	}
 
 	private void testAddingToDatabase(DBManager DbManager, ContentValues cv) {
@@ -76,5 +76,19 @@ public class TestsManager {
 			return true;
 		}
 		return false;
+	}
+
+	public void TestFavourites(DBManager DbManager) {
+		DbManager.addFavourite("1");
+		try {
+			Cursor cursor = DbManager.select("usersfav", "userFavId = ?",
+					new String[] { "1" });
+			if (!cursor.moveToFirst()) {
+				Toast.makeText(context, R.string.AddFavErrorMsg, 1000).show();
+			}
+		} catch (Exception e) {
+			Toast.makeText(context, R.string.AddFavErrorMsg, 1000).show();
+		}
+
 	}
 }

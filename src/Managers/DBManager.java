@@ -35,6 +35,9 @@ public class DBManager extends SQLiteOpenHelper {
 				+ "id integer primary key autoincrement," + "userId integer,"
 				+ "name text," + "surname text," + "dob text," + "bio text,"
 				+ "contacts text," + "about text" + ");");
+		db.execSQL("create table usersfav ("
+				+ "id integer primary key autoincrement," + "userFavId integer"
+				+ ");");
 		// db.execSQL("INSERT INTO " + tableUsers +
 		// " values(1,'Ivan Bordyug')");
 		// db.execSQL("INSERT INTO " + tableUsersInfo
@@ -120,5 +123,11 @@ public class DBManager extends SQLiteOpenHelper {
 			initializeUserInfo(user);
 		cursor.close();
 		return user.getId();
+	}
+
+	public void addFavourite(String favId) {
+		ContentValues cv = new ContentValues();
+		cv.put("userFavId", favId);
+		insert("usersfav", null, cv);
 	}
 }
