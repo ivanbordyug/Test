@@ -5,6 +5,7 @@ import com.coffeecups.testproject.R;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
@@ -48,11 +49,43 @@ public class TestsManager {
 	}
 
 	public boolean isOnline() {
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean checkInfo(String name, String surname, String dob,
+			String uid, DBManager manager) {
+		Cursor cursor = manager.select("usersinfo", "userId = ?",
+				new String[] { uid });
+		if (cursor.moveToFirst()) {
+			if (!new String("Name: "
+					+ cursor.getString(cursor.getColumnIndex("name")))
+					.equals(name)) {
+				cursor.close();
+				return false;
+			}
+			if (!new String("Surname: "
+					+ cursor.getString(cursor.getColumnIndex("surname")))
+					.equals(surname)) {
+				cursor.close();
+				return false;
+			}
+			if (!new String("Date of birth: "
+					+ cursor.getString(cursor.getColumnIndex("dob")))
+					.equals(dob)) {
+				cursor.close();
+				return false;
+			}
+			cursor.close();
+			return true;
+		} else {
+			cursor.close();
+			return false;
+		}
 	}
 }

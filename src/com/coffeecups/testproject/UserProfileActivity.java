@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class UserProfileActivity extends Activity implements OnClickListener {
 
@@ -40,6 +41,19 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 		if (session == null || session.isClosed()) {
 			startActivity(new Intent(UserProfileActivity.this,
 					LoginActivity.class));
+		}
+		testInfo();
+	}
+
+	private void testInfo() {
+		TestsManager tManager = new TestsManager(this);
+		TextView name = (TextView) findViewById(R.id.name);
+		TextView surname = (TextView) findViewById(R.id.surname);
+		TextView dob = (TextView) findViewById(R.id.dob);
+		if (!tManager.checkInfo(name.getText().toString(), surname.getText()
+				.toString(), dob.getText().toString(), getIntent().getExtras()
+				.getString("userId"), new DBManager(this))) {
+			Toast.makeText(this, "text", 1000).show();
 		}
 	}
 
