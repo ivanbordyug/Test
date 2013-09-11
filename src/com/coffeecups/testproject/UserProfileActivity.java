@@ -361,17 +361,27 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 	}
 
 	private void testInfo() {
-		TestsManager tManager = new TestsManager(this);
-		TextView name = (TextView) findViewById(R.id.name);
-		TextView surname = (TextView) findViewById(R.id.surname);
-		TextView dob = (TextView) findViewById(R.id.dob);
-		if (!tManager.checkInfo(name.getText().toString().trim(), surname
-				.getText().toString().trim(), dob.getText().toString().trim(),
-				getIntent().getExtras().getString("userId"),
-				new DBManager(this))) {
-			Toast.makeText(this, "text", 1000).show();
-		}
-		testEditingInfo();
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				TestsManager tManager = new TestsManager(
+						UserProfileActivity.this);
+				TextView name = (TextView) findViewById(R.id.name);
+				TextView surname = (TextView) findViewById(R.id.surname);
+				TextView dob = (TextView) findViewById(R.id.dob);
+				if (!tManager.checkInfo(name.getText().toString(), surname
+						.getText().toString().trim(), dob.getText().toString()
+						.trim(), userId,
+						new DBManager(UserProfileActivity.this))) {
+					Toast.makeText(UserProfileActivity.this, "text", 1000)
+							.show();
+				}
+				testEditingInfo();
+			}
+		});
+
 	}
 
 	private void testEditingInfo() {

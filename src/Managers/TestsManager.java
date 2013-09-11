@@ -85,19 +85,25 @@ public class TestsManager {
 		Cursor cursor = manager.select("usersinfo", "userId = ?",
 				new String[] { uid });
 		if (cursor.moveToFirst()) {
-			if (!cursor.getString(cursor.getColumnIndex("name")).trim()
-					.equals(name)) {
-				cursor.close();
-				return false;
-			}
-			if (!cursor.getString(cursor.getColumnIndex("surname")).trim()
-					.equals(surname)) {
-				cursor.close();
-				return false;
-			}
-			if (!cursor.getString(cursor.getColumnIndex("dob")).equals(dob)) {
-				cursor.close();
-				return false;
+			try {
+				if (!cursor.getString(cursor.getColumnIndex("name")).trim()
+						.equals(name)) {
+					cursor.close();
+					return false;
+				}
+				if (!cursor.getString(cursor.getColumnIndex("surname")).trim()
+						.equals(surname)) {
+					cursor.close();
+					return false;
+				}
+
+				if (!cursor.getString(cursor.getColumnIndex("dob")).toString()
+						.equals(dob)) {
+					cursor.close();
+					return false;
+				}
+			} catch (Exception e) {
+				Toast.makeText(context, "Users data isn't setted", 1000).show();
 			}
 			cursor.close();
 			return true;
