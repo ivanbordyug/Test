@@ -13,5 +13,6 @@
     <string name="editTextWindow">Edit</string>
     <string name="leaveInfoLabel">Leave about</string>
     <string name="dateErrorMsg">Wrong date</string>
+    <string name="errorEditing">Editing user data test is failed</string>
 
 </resources>

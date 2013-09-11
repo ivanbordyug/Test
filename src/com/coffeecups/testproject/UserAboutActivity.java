@@ -15,6 +15,7 @@ import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class UserAboutActivity extends Activity implements OnClickListener {
 	TextWatcher watcher;
@@ -29,12 +30,20 @@ public class UserAboutActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_about);
 		userId = getIntent().getExtras().getString("userId");
-
 		aboutTV = (TextView) findViewById(R.id.aboutTV);
-		aboutEdit = (EditText) findViewById(R.id.abouEditText);
+		aboutEdit = (EditText) findViewById(R.id.aboutEditText);
 		DbManager = new DBManager(this);
 		aboutTV.setText(getUserAbout());
-		findViewById(R.id.leaveAbout).setOnClickListener(this);
+		aboutTV.setOnClickListener(this);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (!testUserAbout() && checkAllElementsPresense()) {
+			Toast.makeText(this, R.string.errorEditing, 1000).show();
+		}
 	}
 
 	@Override
@@ -42,27 +51,28 @@ public class UserAboutActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 
 		initializeWatcher();
-		final EditText editText = (EditText) findViewById(R.id.abouEditText);
-		editText.requestFocus();
+		aboutEdit.setVisibility(View.VISIBLE);
+		aboutTV.setVisibility(View.INVISIBLE);
+		aboutEdit.requestFocus();
 		showSoftKeyboard();
-		editText.addTextChangedListener(watcher);
-		// editText.setOnKeyListener(new OnKeyListener() {
-		// @Override
-		// public boolean onKey(View v, int keyCode, KeyEvent event) {
-		// if (keyCode == event.KEYCODE_ENTER) {
-		// updateUser("about", editText.getText().toString());
-		// editText.removeTextChangedListener(watcher);
-		// }
-		// return false;
-		// }
-		// });
+		aboutEdit.addTextChangedListener(watcher);
+		aboutEdit.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (keyCode == event.KEYCODE_ENTER) {
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		aboutEdit.setVisibility(View.INVISIBLE);
+		aboutTV.setVisibility(View.VISIBLE);
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (aboutEdit != null)
-				updateUser("about", aboutTV.getText().toString());
+				updateUser("bio", aboutTV.getText().toString());
 			UserAboutActivity.this.finish();
 			moveTaskToBack(true);
 		}
@@ -95,7 +105,7 @@ public class UserAboutActivity extends Activity implements OnClickListener {
 			}
 		};
 		aboutEdit.addTextChangedListener(watcher);
-		aboutEdit.setText("");
+		aboutEdit.setText(aboutTV.getText());
 	}
 
 	private String validateString(String string) {
@@ -139,8 +149,57 @@ public class UserAboutActivity extends Activity implements OnClickListener {
 	private String getUserAbout() {
 		Cursor cursor = getUser();
 		if (cursor.moveToFirst()) {
-			return getFieldStringValue(cursor, "about");
+			return getFieldStringValue(cursor, "bio");
 		}
 		return "null";
+	}
+
+	private boolean testUserAbout() {
+		String originalValue = getUserAbout();
+		String testValue = "testValueUserAbout";
+		initializeWatcher();
+		aboutEdit.setText(testValue);
+		updateUser("bio", aboutTV.getText().toString());
+		if (validateData("bio", testValue, DbManager)) {
+			updateUser("bio", originalValue);
+			aboutEdit.setText("");
+			aboutTV.setText(originalValue);
+			return true;
+		} else {
+			updateUser("bio", originalValue);
+			aboutEdit.setText("");
+			aboutTV.setText(originalValue);
+			return false;
+		}
+	}
+
+	private boolean validateData(String fieldName, String expectedValue,
+			DBManager DbManager) {
+		Cursor cursor = getUserInfoCursor();
+		if (cursor.moveToFirst()) {
+			if (cursor.getString(cursor.getColumnIndex(fieldName)).equals(
+					expectedValue)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	private boolean checkAllElementsPresense() {
+		try {
+			TextView aboutTV = (TextView) findViewById(R.id.aboutTV);
+			EditText aboutEdit = (EditText) findViewById(R.id.aboutEditText);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private Cursor getUserInfoCursor() {
+		return DbManager.select("usersinfo", "userId = ?",
+				new String[] { userId });
 	}
 }

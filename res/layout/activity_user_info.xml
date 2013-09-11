@@ -13,20 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
-
-            <EditText
-                android:id="@+id/editTextName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/editTextSurname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:singleLine="true" />
         </LinearLayout>
 
         <ScrollView
@@ -77,15 +63,36 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:gravity="center_vertical"
                                 android:text="@string/name"
                                 android:textColor="@android:color/black" />
 
-                            <TextView
-                                android:id="@+id/name"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:singleLine="true"
-                                android:textColor="@android:color/black" />
+                                android:layout_weight="1" >
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" >
+
+                                    <TextView
+                                        android:id="@+id/name"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center_vertical"
+                                        android:singleLine="true"
+                                        android:textColor="@android:color/black" />
+
+                                    <EditText
+                                        android:id="@+id/editTextName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:focusable="true"
+                                        android:singleLine="true"
+                                        android:visibility="invisible" />
+                                </RelativeLayout>
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -97,15 +104,36 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:gravity="center_vertical"
                                 android:text="@string/surname"
                                 android:textColor="@android:color/black" />
 
-                            <TextView
-                                android:id="@+id/surname"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:singleLine="true"
-                                android:textColor="@android:color/black" />
+                                android:layout_weight="1" >
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" >
+
+                                    <TextView
+                                        android:id="@+id/surname"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center_vertical"
+                                        android:singleLine="true"
+                                        android:textColor="@android:color/black" />
+
+                                    <EditText
+                                        android:id="@+id/editTextSurname"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:focusable="true"
+                                        android:singleLine="true"
+                                        android:visibility="invisible" />
+                                </RelativeLayout>
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -117,6 +145,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:gravity="center_vertical"
                                 android:text="@string/dob"
                                 android:textColor="@android:color/black" />
 
@@ -124,6 +153,7 @@
                                 android:id="@+id/dob"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:gravity="center_vertical"
                                 android:singleLine="true"
                                 android:textColor="@android:color/black" />
                         </LinearLayout>

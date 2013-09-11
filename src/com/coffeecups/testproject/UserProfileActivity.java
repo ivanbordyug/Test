@@ -3,6 +3,8 @@ package com.coffeecups.testproject;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.crypto.Cipher;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -51,6 +53,8 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 		new TestsManager(this).runTestUP();
 		DbManager = new DBManager(this);
 		userId = getIntent().getExtras().getString("userId");
+		etName = (EditText) findViewById(R.id.editTextName);
+		etSurname = (EditText) findViewById(R.id.editTextSurname);
 		getUserInfo();
 		// initTextWatcher();
 	}
@@ -59,6 +63,7 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		testInfo();
 	}
 
 	@Override
@@ -72,11 +77,15 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.name:
 			initTextWatcherName();
-			myTextChangedListener(etName, etName, "name");
+			tvName.setVisibility(View.INVISIBLE);
+			etName.setVisibility(View.VISIBLE);
+			myTextChangedListener(tvName, etName, "name");
 			break;
 		case R.id.surname:
 			initTextWatcherSurname();
-			myTextChangedListener(etSurname, etSurname, "surname");
+			tvSurname.setVisibility(View.INVISIBLE);
+			etSurname.setVisibility(View.VISIBLE);
+			myTextChangedListener(tvSurname, etSurname, "surname");
 			break;
 		case R.id.dob:
 			showDialog(0);
@@ -113,23 +122,23 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 	}
 
 	private void initializeUserInfoTab(Cursor userInfo) {
-		TextView name = (TextView) findViewById(R.id.name);
-		TextView surname = (TextView) findViewById(R.id.surname);
+		tvName = (TextView) findViewById(R.id.name);
+		tvSurname = (TextView) findViewById(R.id.surname);
 		TextView dob = (TextView) findViewById(R.id.dob);
 		TextView bio = (TextView) findViewById(R.id.bio_content);
 		ProfilePictureView imageProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
 
 		imageProfilePictureView.setProfileId(getFieldStringValue(userInfo,
 				"userId"));
-		name.setText(name.getText().toString() + " "
+		etName.setText(etName.getText().toString()
 				+ getFieldStringValue(userInfo, "name"));
-		name.setOnClickListener(this);
+		etName.setOnClickListener(this);
 
-		surname.setText(surname.getText().toString() + " "
+		tvSurname.setText(tvSurname.getText().toString()
 				+ getFieldStringValue(userInfo, "surname"));
-		surname.setOnClickListener(this);
+		tvSurname.setOnClickListener(this);
 
-		dob.setText(dob.getText().toString() + " "
+		dob.setText(dob.getText().toString()
 				+ getFieldStringValue(userInfo, "dob"));
 		dob.setOnClickListener(this);
 
@@ -188,6 +197,8 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 				if (keyCode == event.KEYCODE_ENTER) {
 					updateUser(updateField, curET.getText().toString());
 					curET.removeTextChangedListener(watcher);
+					textView.setVisibility(View.VISIBLE);
+					curET.setVisibility(View.INVISIBLE);
 				}
 				return false;
 			}
@@ -297,9 +308,9 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated method stub
 			}
 		};
-		etName = (EditText) findViewById(R.id.editTextName);
+
 		etName.addTextChangedListener(watcher);
-		etName.setText("");
+		etName.setText(tvName.getText());
 	}
 
 	private void initTextWatcherSurname() {
@@ -323,9 +334,9 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated method stub
 			}
 		};
-		etSurname = (EditText) findViewById(R.id.editTextSurname);
+
 		etSurname.addTextChangedListener(watcher);
-		etSurname.setText("");
+		etSurname.setText(tvSurname.getText());
 	}
 
 	private boolean isDayValid(int year, int monthOfYear, int dayOfMonth) {
@@ -345,6 +356,108 @@ public class UserProfileActivity extends Activity implements OnClickListener {
 		if (dateSpecified.before(today)) {
 			return true;
 		} else {
+			return false;
+		}
+	}
+
+	private void testInfo() {
+		TestsManager tManager = new TestsManager(this);
+		TextView name = (TextView) findViewById(R.id.name);
+		TextView surname = (TextView) findViewById(R.id.surname);
+		TextView dob = (TextView) findViewById(R.id.dob);
+		if (!tManager.checkInfo(name.getText().toString().trim(), surname
+				.getText().toString().trim(), dob.getText().toString().trim(),
+				getIntent().getExtras().getString("userId"),
+				new DBManager(this))) {
+			Toast.makeText(this, "text", 1000).show();
+		}
+		testEditingInfo();
+	}
+
+	private void testEditingInfo() {
+		DBManager DbManager = new DBManager(this);
+		if (!(testElementsPresense() && testEditingName(DbManager)
+				&& testEditingSurname(DbManager) && !isDayValid(3000, 12, 1))) {
+			Toast.makeText(this, R.string.errorEditing, 1000).show();
+		}
+	}
+
+	private boolean testEditingName(DBManager DbManager) {
+		String testValue = "testValueName";
+		String originalValue = getOriginValue("name");
+		initTextWatcherName();
+		myTextChangedListener(tvName, etName, "name");
+		etName.setText(testValue);
+		updateUser("name", tvName.getText().toString());
+		if (validateData("name", testValue, DbManager)) {
+			updateUser("name", originalValue);
+			etName.setText("");
+			tvName.setText(originalValue);
+			return true;
+		} else {
+			updateUser("name", originalValue);
+			etName.setText("");
+			tvName.setText(originalValue);
+			return false;
+		}
+	}
+
+	private boolean testEditingSurname(DBManager DbManager) {
+		String testValue = "testValueSurname";
+		String originalValue = getOriginValue("surname");
+		initTextWatcherSurname();
+		myTextChangedListener(tvSurname, etSurname, "surname");
+		etSurname.setText(testValue);
+		updateUser("surname", tvSurname.getText().toString());
+		if (validateData("surname", testValue, DbManager)) {
+			updateUser("surname", originalValue);
+			etSurname.setText("");
+			tvSurname.setText(originalValue);
+			return true;
+		} else {
+			updateUser("surname", originalValue);
+			etSurname.setText("");
+			tvSurname.setText(originalValue);
+			return false;
+		}
+	}
+
+	private String getOriginValue(String fieldName) {
+		Cursor cursor = DbManager.select("usersinfo", "userId = ?",
+				new String[] { userId });
+		if (cursor.moveToFirst()) {
+			String value = cursor.getString(cursor.getColumnIndex(fieldName));
+			cursor.close();
+			return value;
+		} else {
+			return "";
+		}
+	}
+
+	private boolean validateData(String fieldName, String expectedValue,
+			DBManager DbManager) {
+		Cursor cursor = getUserInfoCursor();
+		if (cursor.moveToFirst()) {
+			if (cursor.getString(cursor.getColumnIndex(fieldName)).equals(
+					expectedValue)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	private boolean testElementsPresense() {
+		try {
+			EditText etName = (EditText) findViewById(R.id.editTextName);
+			EditText etSurname = (EditText) findViewById(R.id.editTextSurname);
+			TextView dob = (TextView) findViewById(R.id.dob);
+			TextView bio = (TextView) findViewById(R.id.bio_content);
+			ProfilePictureView imageProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+			return true;
+		} catch (Exception e) {
 			return false;
 		}
 	}

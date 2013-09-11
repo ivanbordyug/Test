@@ -8,6 +8,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class TestsManager {
@@ -76,5 +78,38 @@ public class TestsManager {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean checkInfo(String name, String surname, String dob,
+			String uid, DBManager manager) {
+		Cursor cursor = manager.select("usersinfo", "userId = ?",
+				new String[] { uid });
+		if (cursor.moveToFirst()) {
+			if (!cursor.getString(cursor.getColumnIndex("name")).trim()
+					.equals(name)) {
+				cursor.close();
+				return false;
+			}
+			if (!cursor.getString(cursor.getColumnIndex("surname")).trim()
+					.equals(surname)) {
+				cursor.close();
+				return false;
+			}
+			if (!cursor.getString(cursor.getColumnIndex("dob")).equals(dob)) {
+				cursor.close();
+				return false;
+			}
+			cursor.close();
+			return true;
+		} else {
+			cursor.close();
+			return false;
+		}
+	}
+
+	public void checkUpdatingUser(EditText nameET, EditText surnameET,
+			TextView nameTV, TextView surnameTV) {
+		// nameTV.setText("12345");
+		nameET.setText("12345");
 	}
 }

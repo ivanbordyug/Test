@@ -6,36 +6,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <EditText
-                android:id="@+id/abouEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="true" />
-        </LinearLayout>
+        android:layout_height="match_parent"
+        android:background="@drawable/background" >
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background" >
+            android:layout_height="match_parent" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
-
-                <Button
-                    android:id="@+id/leaveAbout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:text="@string/leaveInfoLabel" />
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -48,6 +29,18 @@
                 </ScrollView>
             </LinearLayout>
         </ScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/aboutEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:visibility="invisible" />
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>
